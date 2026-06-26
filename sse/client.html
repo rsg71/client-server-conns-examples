@@ -1,0 +1,35 @@
+<!-- client.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SSE Client</title>
+</head>
+<body>
+  <h1>Server-Sent Events</h1>
+  <p>Log:</p>
+  <ul id="log"></ul>
+
+  <script>
+    const log = document.getElementById('log');
+
+    const evtSource = new EventSource('/events');
+
+    evtSource.onmessage = (event) => {
+      console.log('message received: ', event)
+      const data = JSON.parse(event.data);
+      const li = document.createElement('li');
+      li.textContent = JSON.stringify(data);
+      log.appendChild(li);
+    };
+
+    evtSource.addEventListener('myEvent', (event) => {
+      console.log('Custom event:', JSON.parse(event.data));
+    });
+
+    evtSource.onerror = (err) => {
+      console.error('SSE error:', err);
+    };
+  </script>
+</body>
+</html>
